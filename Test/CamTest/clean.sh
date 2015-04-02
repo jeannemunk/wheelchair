@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rm circle
+rm camera
 rm img.zip
