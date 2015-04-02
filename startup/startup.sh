@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 30;
+sleep 20;
 echo "Sending emails..."
 python /root/startup/mailer.py
 echo "Opening test program"
