@@ -18,13 +18,15 @@ using namespace BlackLib;
 class Motor
 {
     private:
-        vector<BlackPWM> motor;
+        //BlackPWM pwm_center(BlackPWM::EHRPWM1B);
+        //BlackPWM pwm_fb(BlackPWM::EHRPWM0B);
+        //BlackPWM pwm_lr(BlackPWM::EHRPWM0A);
 
     public:
-        Motor();
-        void lrMove(float);
-        void fbMove(float);
-        void stop();
+        Motor(BlackPWM*, BlackPWM*, BlackPWM*);
+        void lrMove(float, BlackPWM*);
+        void fbMove(float, BlackPWM*);
+        void stop(BlackPWM*, BlackPWM*);
         int v_duty(float);
 
 };

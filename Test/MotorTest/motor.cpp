@@ -6,47 +6,39 @@
 
 #include "motor.h"
 
-Motor::Motor()
+Motor::Motor(BlackPWM* center, BlackPWM* fb, BlackPWM* lr)
 {
-    BlackPWM pwm_center(EHRPWM1B);
-    BlackPWM pwm_fb(EHRPWM0B);
-    BlackPWM pwm_lr(EHRPWM0A);
-
-    this->motor.push_back(pwm_center);
-    this->motor.push_back(pwm_fb);
-    this->motor.push_back(pwm_lr);
-
     sleep(1);
-    this->motor[0].setPeriodTime(2000000);
-    this->motor[1].setPeriodTime(2000000);
-    this->motor[2].setPeriodTime(2000000);
+    
+    center->setPeriodTime(2000000);
+    fb->setPeriodTime(2000000);
+    lr->setPeriodTime(2000000);
 
-    this->motor[0].setDutyPercent(50);
-    this->motor[1].setDutyPercent(50);
-    this->motor[2].setDutyPercent(50);
-
+    center->setDutyPercent(50);
+    fb->setDutyPercent(50);
+    lr->setDutyPercent(50);
 }
 
-void Motor::fbMove(float volt)
+void Motor::fbMove(float volt, BlackPWM* fb)
 {
     int percent = v_duty(volt);
-    this->motor[1].setDutyPercent(percent);
+    fb->setDutyPercent(percent);
 }
 
-void Motor::lrMove(float volt)
+void Motor::lrMove(float volt, BlackPWM* lr)
 {
     int percent = v_duty(volt);
-    this->motor[2].setDutyPercent(percent);
+    lr->setDutyPercent(percent);
 }
 
-void Motor::stop()
+void Motor::stop(BlackPWM* fb, BlackPWM* lr)
 {
-    this->motor[1].setDutyPercent(50);
-    this->motor[2].setDutyPercent(50);
+    fb->setDutyPercent(50);
+    lr->setDutyPercent(50);
 }
 
 int Motor::v_duty(float volt)
 {
-    return volt/5.0;
+    return 100*volt/5.0;
 }
 

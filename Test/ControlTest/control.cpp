@@ -47,9 +47,9 @@ void Control::setLRvoltage(float aLRvoltage)
     {
         this->lrV = 3.7;
     }
-    else if (aLRvoltage < 1)
+    else if (aLRvoltage < 1.1)
     {
-        this->lrV = 1;
+        this->lrV = 1.1;
     }
     else
     {
@@ -59,8 +59,13 @@ void Control::setLRvoltage(float aLRvoltage)
 
 void Control::fbControl(int pixelA)
 {
-    float Kg = 0.017;
+    float Kg = 0.0085;
     int error = this->pixelD - pixelA;
+
+    if (error < 10 && error > -10)
+    {
+        error = 0;
+    }
 
     this->setFBvoltage(2.5 + error*Kg);
 }

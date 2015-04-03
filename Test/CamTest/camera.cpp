@@ -53,6 +53,8 @@ void Camera::setXCenter(int aXCenter)
 
 void Camera::track()
 {
+    int c = 0;
+
     int lowH = 90;
     int highH = 140;
     
@@ -64,9 +66,17 @@ void Camera::track()
 
     vector<Vec3f> circles;
     Mat imgOriginal; 
+    Mat imgHSV;
+    Mat imgThresholded;
+    Mat imgDown;
 
-    for (int c = 0; c < 2; ++c)
+    while (circles.size() == 0)
     {
+        if (c >= 5)
+        {
+            break;
+        }
+
         this->cap >> imgOriginal; // read a new frame from video
 
         if (imgOriginal.empty()) // if not success, break loop
@@ -75,11 +85,8 @@ void Camera::track()
             break;
         }
 
-        Mat imgHSV;
-
-        cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); // Convert the captured frame from BGR to HSV
-
-        Mat imgThresholded;
+        // Convert the captured frame from BGR to HSV
+        cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); 
 
         // Threshold the image
         inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded); 
@@ -87,15 +94,16 @@ void Camera::track()
         // morphological opening (remove small objects from the foreground)
         erode(imgThresholded, imgThresholded, getStructuringElement(MORPH_RECT, Size(5, 5)));
         dilate(imgThresholded, imgThresholded, getStructuringElement(MORPH_RECT, Size(3, 3)));
-
-        Mat imgUp;
-        pyrUp(imgThresholded, imgUp);
-        pyrDown(imgUp, imgThresholded);
+        
+        // Downsample and Upsample to blur the image
+        pyrDown(imgThresholded, imgDown);
+        pyrUp(imgDown, imgThresholded);
         GaussianBlur(imgThresholded, imgThresholded, Size(9, 9), 2, 2);
                     
         HoughCircles(imgThresholded, circles, CV_HOUGH_GRADIENT, 1, imgThresholded.rows / 10, 100, 35, 0, 0);
 
         // Draw the circles detected
+        /*
         for (int i = 0; i < circles.size(); i++)
         {
             Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
@@ -105,15 +113,26 @@ void Camera::track()
             // circle outline
             circle(imgOriginal, center, cRadius, Scalar(0, 0, 255), 3, 8, 0);
 
-            cout << "Radius " << c << ": " << cRadius << endl;
+            //cout << "Radius " << c << ": " << cRadius << endl;
         }
+        */
 
         // Assign radius and xCenter for tracking
-        this->radius = cvRound(circles[0][2]);
-        this->xCenter = cvRound(circles[0][0]);
+        if (circles.size() > 0)
+        {
+            this->setRadius(cvRound(circles[0][2]));
+            this->setXCenter(cvRound(circles[0][0]));
+        }
 
-        imwrite("Thresholded-"+to_string(c)+".jpg", imgThresholded); // write the thresholded image
-        imwrite("Original-"+to_string(c)+".jpg", imgOriginal); // write the original image
+        /*
+        // write the thresholded image
+        imwrite("Thresholded-"+to_string(c)+".jpg", imgThresholded);         
+ 
+        // write the original image
+        imwrite("Original-"+to_string(c)+".jpg", imgOriginal);
+        */
+
+        ++c;
     }
 
     return;
