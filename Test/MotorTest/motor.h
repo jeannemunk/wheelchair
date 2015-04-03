@@ -9,7 +9,8 @@
 
 #include <iostream>
 #include <string>
-#include "../libs/BlackLib/v2_0/BlackLib.h"
+#include <vector>
+#include "../../libs/BlackLib/v2_0/BlackLib.h"
 
 using namespace std;
 using namespace BlackLib;
@@ -17,14 +18,15 @@ using namespace BlackLib;
 class Motor
 {
     private:
-        BlackPWM pwm_center(EHRPWM1B);
-        BlackPWM pwm_fb(EHRPWM0B);
-        BlackPWM pwm_lr(EHRPWM0A);
+        vector<BlackPWM> motor;
 
     public:
         Motor();
         void lrMove(float);
         void fbMove(float);
+        void stop();
         int v_duty(float);
 
 };
+
+#endif

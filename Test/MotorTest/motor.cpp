@@ -8,31 +8,45 @@
 
 Motor::Motor()
 {
+    BlackPWM pwm_center(EHRPWM1B);
+    BlackPWM pwm_fb(EHRPWM0B);
+    BlackPWM pwm_lr(EHRPWM0A);
+
+    this->motor.push_back(pwm_center);
+    this->motor.push_back(pwm_fb);
+    this->motor.push_back(pwm_lr);
+
     sleep(1);
-    this->pwm_center.setPeriodTime(2000000);
-    this->pwm_fb.setPeriodTime(2000000);
-    this->pwm_lr.setPeriodTime(2000000);
+    this->motor[0].setPeriodTime(2000000);
+    this->motor[1].setPeriodTime(2000000);
+    this->motor[2].setPeriodTime(2000000);
 
-    this->pwm_center.setDutyPercent(50);
-    this->pwm_fb.setDutyPercent(50);
-    this->pwm_lr.setDutyPercent(50);
+    this->motor[0].setDutyPercent(50);
+    this->motor[1].setDutyPercent(50);
+    this->motor[2].setDutyPercent(50);
 
 }
 
-int main() 
+void Motor::fbMove(float volt)
 {
-
-    while (1)
-    {
-        // Move forward and left to measure curvature
-        pwm_fb.setDutyPercent(40);
-        pwm_lr.setDutyPercent(60);
-        sleep(5);
-        
-        pwm_fb.setDutyPercent(50);
-        pwm_lr.setDutyPercent(50);
-        break;
-    }
-
-    return 0;
+    int percent = v_duty(volt);
+    this->motor[1].setDutyPercent(percent);
 }
+
+void Motor::lrMove(float volt)
+{
+    int percent = v_duty(volt);
+    this->motor[2].setDutyPercent(percent);
+}
+
+void Motor::stop()
+{
+    this->motor[1].setDutyPercent(50);
+    this->motor[2].setDutyPercent(50);
+}
+
+int Motor::v_duty(float volt)
+{
+    return volt/5.0;
+}
+
