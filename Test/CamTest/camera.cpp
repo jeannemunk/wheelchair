@@ -74,6 +74,8 @@ void Camera::track()
     {
         if (c >= 5)
         {
+            this->radius = -1;
+            this->xCenter = -1;
             break;
         }
 

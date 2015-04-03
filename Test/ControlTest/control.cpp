@@ -62,7 +62,7 @@ void Control::fbControl(int pixelA)
     float Kg = 0.0085;
     int error = this->pixelD - pixelA;
 
-    if (error < 10 && error > -10)
+    if ((error < 10 && error > -10) || pixelA == -1)
     {
         error = 0;
     }
