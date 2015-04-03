@@ -22,6 +22,8 @@ class Control
         int radiusD;    // LR Control
         
     public:
+        Control();
+
         float getFBvoltage();
         float getLRvoltage();
 
@@ -31,3 +33,5 @@ class Control
         void fbControl(int);
         void lrControl(int); 
 };
+
+#endif
