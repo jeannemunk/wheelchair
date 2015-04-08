@@ -14,6 +14,8 @@ Motor::Motor(BlackPWM* center, BlackPWM* fb, BlackPWM* lr)
     fb->setPeriodTime(2000000);
     lr->setPeriodTime(2000000);
 
+    sleep(1);
+
     center->setDutyPercent(50);
     fb->setDutyPercent(50);
     lr->setDutyPercent(50);

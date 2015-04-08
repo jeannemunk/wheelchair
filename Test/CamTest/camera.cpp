@@ -7,6 +7,7 @@ Camera::Camera()
 
     this->radius = 0;
     this->xCenter = 0;
+    this->circle = true;
 
     this->cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
     this->cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
@@ -25,6 +26,11 @@ int Camera::getRadius()
 int Camera::getXCenter()
 {
     return this->xCenter;
+}
+
+bool Camera::getCircleStatus()
+{
+    return this->circle;
 }
 
 void Camera::setRadius(int aRadius)
@@ -70,12 +76,15 @@ void Camera::track()
     Mat imgThresholded;
     Mat imgDown;
 
+    this->circle = true;
+
     while (circles.size() == 0)
     {
         if (c >= 5)
         {
             this->radius = -1;
             this->xCenter = -1;
+            this->circle = false;
             break;
         }
 

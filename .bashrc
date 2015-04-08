@@ -17,3 +17,6 @@
  alias rm='rm -i'
  alias cp='cp -i'
  alias mv='mv -i'
+
+
+ export PATH=$PATH:/usr/xenomai/bin

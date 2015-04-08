@@ -23,6 +23,7 @@ class Camera
 
         int radius;
         int xCenter;
+        bool circle;
         
     public:
         Camera();
@@ -30,6 +31,7 @@ class Camera
         void setXCenter(int);
         int getRadius();
         int getXCenter();
+        bool getCircleStatus();
         void track();
 };
 
